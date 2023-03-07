@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="roomba"    default="roomba1" />
+    <arg name="wait_time" default="0.0" />
+    <arg name="file_path" default="$(env HOME)/bagfiles/experimental_file_20220224/" />
+
+    <!-- rosbag -->
+    <node pkg="rosbag" type="play" name="$(arg roomba)_play" args=" -d $(arg wait_time) $(arg file_path)/$(arg roomba).bag" />
+
+    <!-- unzip -->
+    <include file="$(find ros_utils)/launch/image_unzipper.launch" >
+        <arg name="roomba"        value="$(arg roomba)" />
+        <arg name="unzip_theta_s" value="true" />
+        <arg name="unzip_color"   value="true" />
+        <arg name="unzip_detect"  value="true" />
+    </include>
+
+    <!-- equirectangular_convertor -->
+    <arg name="convertor_theta_s" default="false" />
+    <group if="$(arg convertor_theta_s)" >
+        <include file="$(find ros_utils)/launch/equirectangular_convertor.launch" >
+            <arg name="roomba" value="$(arg roomba)" />
+        </include>
+    </group>
+
+    <!-- objects_data_publisher -->
+    <arg name="publish_objects_data" default="false" />
+    <group if="$(arg publish_objects_data)" >
+        <include file="$(find ros_utils)/launch/objects_data_publisher.launch" >
+            <arg name="roomba" value="$(arg roomba)" />
+        </include>
+    </group>
+
+</launch>

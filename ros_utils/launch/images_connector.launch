@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="config_path" default="$(find ros_utils)/config" />
+
+    <!-- images_connector -->
+    <node pkg="images_connector" type="images_connector_node" name="images_connector" >
+        <!-- rosparam -->
+        <rosparam command="load" file="$(arg config_path)/params/robot_element.yaml" />
+    </node>
+
+</launch>

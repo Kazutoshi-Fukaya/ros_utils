@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="roomba"      default="roomba1" />
+
+    <!-- rosbag_tf -->
+    <include file="$(find ros_utils)/launch/rosbag_tf.launch" >
+        <arg name="roomba" value="$(arg roomba)" />
+    </include>
+
+    <!-- objects_data_publisher -->
+    <node pkg="objects_data_publisher" type="objects_data_publisher_node" name="$(arg roomba)_objects_data_publisher" >
+        <!-- remap -->
+        <remap from="pose_in" to="$(arg roomba)/pose" />
+        <remap from="op_in"   to="$(arg roomba)/object_positions" />
+        <remap from="od_out"  to="$(arg roomba)/objects_data" />
+
+        <!-- params -->
+        <param name="ROBOT_NAME"   value="$(arg roomba)" />
+        <param name="MAP_FRAME_ID" value="map" />
+    </node>
+
+</launch>

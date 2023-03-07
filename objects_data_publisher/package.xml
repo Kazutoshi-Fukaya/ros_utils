@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>objects_data_publisher</name>
+  <version>0.0.0</version>
+  <description>The objects_data_publisher package</description>
+  <maintainer email="amsl@todo.todo">amsl</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>geometry_msgs</depend>
+  <depend>multi_localizer_msgs</depend>
+  <depend>object_detector_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+  </export>
+</package>
