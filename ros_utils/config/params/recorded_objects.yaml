@@ -1,0 +1,12 @@
+recorded_objects:
+    - name: trash_can
+    - name: fire_hydrant
+    - name: fire_extinguisher
+    - name: elevator
+    - name: bench
+    - name: big_bench
+    - name: kitchenette_icon
+    - name: toilet_icon
+    - name: table
+    - name: chair
+    # - name: roomba

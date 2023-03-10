@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="laser_frame" default="" />
+    <arg name="roomba" default="roomba1" />
+
+    <node pkg="pole_eliminator" type="pole_eliminator_node" name="$(arg roomba)_pole_eliminator">
+        <!-- remap -->
+        <remap from="scan"           to="$(arg roomba)/scan" />
+        <remap from="corrected_scan" to="$(arg roomba)/corrected_scan" />
+
+        <!-- parameters -->
+        <param name="ROBOT_RADIUS" value="0.30" />
+        <param name="MARGIN"       value="15" />
+        <param name="LASER_FRAME"  value="$(arg laser_frame)" />
+    </node>
+
+</launch>

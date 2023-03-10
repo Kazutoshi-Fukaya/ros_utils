@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="roomba"                     default="roomba1" />
+    <arg name="is_record_pose"             default="false" />
+	<arg name="is_record_object_detection" default="false" />
+	<arg name="record_file_path"           default="" />
+
+    <!-- pose_recorder -->
+    <group if="$(arg is_record_pose)" >
+        <include file="$(find ros_utils)/launch/pose_recorder.launch" >
+            <arg name="roomba"           value="$(arg roomba)" />
+            <arg name="is_record"        value="$(arg is_record_pose)" />
+            <arg name="record_file_path" value="$(arg record_file_path)" />
+        </include>
+    </group>
+
+	<!-- object_detection_recorder -->
+    <group if="$(arg is_record_object_detection)" >
+        <include file="$(find ros_utils)/launch/object_detection_recorder.launch" >
+            <arg name="roomba"           value="$(arg roomba)" />
+            <arg name="is_record"        value="$(arg is_record_object_detection)" />
+            <arg name="record_file_path" value="$(arg record_file_path)" />
+        </include>
+    </group>
+
+</launch>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="roomba"           default="roomba1" />
+	<arg name="is_record"        default="false" />
+	<arg name="record_file_path" default="" />
+
+	<!-- object_detection_recorder -->
+    <node pkg="object_detection_recorder" type="object_detection_recorder_node" name="$(arg roomba)_object_detection_recorder" >
+        <!-- remap -->
+        <remap from="od_in" to="$(arg roomba)/object_positions" />
+
+        <!-- params -->
+        <param name="HZ"                     value="1" />
+        <param name="PROBABILITY_TH"         value="0.8" />
+        <param name="VISIBLE_LOWER_DISTANCE" value="0.3" />
+        <param name="VISIBLE_UPPER_DISTANCE" value="5.0" />
+        <param name="IS_RECORD"              value="$(arg is_record)" />
+        <param name="RECORD_FILE_PATH"       value="$(arg record_file_path)" />
+        <rosparam command="load" file="$(find ros_utils)/config/params/recorded_objects.yaml" />
+    </node>
+
+</launch>

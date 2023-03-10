@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="roomba"      default="roomba1" />
+    <arg name="roomba"       default="roomba1" />
+    <arg name="publish_pose" default="false" />
 
     <!-- rosbag_tf_node -->
     <node pkg="tf_utils" type="rosbag_tf_node" name="$(arg roomba)_rosbag_tf" >
@@ -10,8 +11,13 @@
         <remap from="pose_out" to="$(arg roomba)/pose" />
 
         <!-- params -->
+        <param name="PUBLISH_POSE"       value="$(arg publish_pose)" />
         <param name="MAP_FRAME_ID"       value="map" />
         <param name="BASE_LINK_FRAME_ID" value="$(arg roomba)/base_link" />
+        <param name="LASER_FRAME_ID"     value="$(arg roomba)/laser" />
+        <param name="CAMERA_FRAME_ID"    value="$(arg roomba)/camera" />
+
+        <rosparam command="load" file="$(find tf_utils)/config/params/rosbag_tf.yaml" />
     </node>
 
 </launch>

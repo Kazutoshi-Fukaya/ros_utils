@@ -5,15 +5,40 @@ RosbagTF::RosbagTF() :
 {
 	private_nh_.param("MAP_FRAME_ID",MAP_FRAME_ID_,{std::string("map")});
     private_nh_.param("BASE_LINK_FRAME_ID",BASE_LINK_FRAME_ID_,{std::string("base_link")});
+    private_nh_.param("LASER_FRAME_ID",LASER_FRAME_ID_,{std::string("laser")});
+    private_nh_.param("CAMERA_FRAME_ID",CAMERA_FRAME_ID_,{std::string("camera")});
 
-    pose_sub_ = nh_.subscribe("pose_in",1,&RosbagTF::pose_callback,this);
-    odom_sub_ = nh_.subscribe("odom_in",1,&RosbagTF::odom_callback,this);
+    TFPose LASER_POSE;
+    private_nh_.param("LASER_X",LASER_POSE.x,{0.0});
+    private_nh_.param("LASER_Y",LASER_POSE.y,{0.0});
+    private_nh_.param("LASER_Z",LASER_POSE.z,{0.0});
+    private_nh_.param("LASER_ROLL",LASER_POSE.roll,{0.0});
+    private_nh_.param("LASER_PITCH",LASER_POSE.pitch,{0.0});
+    private_nh_.param("LASER_YAW",LASER_POSE.yaw,{0.0});
+    laser_transform_stamped_ = get_transform_stamped(BASE_LINK_FRAME_ID_,LASER_FRAME_ID_,LASER_POSE);
+
+    TFPose CAMERA_POSE;
+    private_nh_.param("CAMERA_X",CAMERA_POSE.x,{0.0});
+    private_nh_.param("CAMERA_Y",CAMERA_POSE.y,{0.0});
+    private_nh_.param("CAMERA_Z",CAMERA_POSE.z,{0.0});
+    private_nh_.param("CAMERA_ROLL",CAMERA_POSE.roll,{0.0});
+    private_nh_.param("CAMERA_PITCH",CAMERA_POSE.pitch,{0.0});
+    private_nh_.param("CAMERA_YAW",CAMERA_POSE.yaw,{0.0});
+    camera_transform_stamped_ = get_transform_stamped(BASE_LINK_FRAME_ID_,CAMERA_FRAME_ID_,CAMERA_POSE);
    
-    pose_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("pose_out",1);
+    bool publish_pose;
+    private_nh_.param("PUBLISH_POSE",publish_pose,{false});
+    if(publish_pose){
+        pose_sub_ = nh_.subscribe("pose_in",1,&RosbagTF::pose_callback,this);
+        pose_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("pose_out",1);
+    }
+
+    odom_sub_ = nh_.subscribe("odom_in",1,&RosbagTF::odom_callback,this);
 
     buffer_.reset(new tf2_ros::Buffer);
     listener_.reset(new tf2_ros::TransformListener(*buffer_));
     broadcaster_.reset(new tf2_ros::TransformBroadcaster);
+    static_broadcaster_.reset(new tf2_ros::StaticTransformBroadcaster);
 }
 
 RosbagTF::~RosbagTF() {}
@@ -64,4 +89,27 @@ void RosbagTF::pose_callback(const geometry_msgs::PoseWithCovarianceStampedConst
     broadcaster_->sendTransform(map_to_odom_transform);
 }
 
-void RosbagTF::process() { ros::spin(); }
+geometry_msgs::TransformStamped RosbagTF::get_transform_stamped(std::string frame_id,std::string child_frame_id,TFPose pose)
+{
+    geometry_msgs::TransformStamped static_transform;
+    static_transform.header.stamp = ros::Time::now();
+    static_transform.header.frame_id = frame_id;
+    static_transform.child_frame_id = child_frame_id;
+    static_transform.transform.translation.x = pose.x;
+    static_transform.transform.translation.y = pose.y;
+    static_transform.transform.translation.z = pose.z;
+    tf2::Quaternion tf_q;
+    tf_q.setRPY(pose.roll,pose.pitch,pose.yaw);
+    static_transform.transform.rotation.x = tf_q.x();
+    static_transform.transform.rotation.y = tf_q.y();
+    static_transform.transform.rotation.z = tf_q.z();
+    static_transform.transform.rotation.w = tf_q.w();
+
+    return static_transform;
+}
+
+void RosbagTF::process() 
+{
+    static_broadcaster_->sendTransform({laser_transform_stamped_, camera_transform_stamped_});
+    ros::spin(); 
+}

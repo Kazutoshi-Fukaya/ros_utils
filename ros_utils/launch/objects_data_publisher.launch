@@ -4,7 +4,8 @@
 
     <!-- rosbag_tf -->
     <include file="$(find ros_utils)/launch/rosbag_tf.launch" >
-        <arg name="roomba" value="$(arg roomba)" />
+        <arg name="roomba"       value="$(arg roomba)" />
+        <arg name="publish_pose" value="true" />
     </include>
 
     <!-- objects_data_publisher -->

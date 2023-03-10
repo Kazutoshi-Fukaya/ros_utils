@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="roomba"           default="roomba1" />
+	<arg name="is_record"        default="false" />
+	<arg name="record_file_path" default="" />
+
+	<!-- pose_recorder -->
+    <node pkg="pose_recorder" type="pose_recorder_node" name="$(arg roomba)_pose_recorder">
+        <!-- remap -->
+        <remap from="est_pose" to="$(arg roomba)/pose" />
+        <remap from="ref_pose" to="$(arg roomba)/amcl_pose" />
+
+        <!-- params -->
+        <param name="HZ"               value="1" />
+        <param name="IS_RECORD"        value="$(arg is_record)" />
+        <param name="RECORD_FILE_PATH" value="$(arg record_file_path)" />
+    </node>
+
+</launch>
