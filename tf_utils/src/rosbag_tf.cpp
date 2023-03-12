@@ -1,9 +1,9 @@
 #include "rosbag_tf/rosbag_tf.h"
 
 RosbagTF::RosbagTF() :
-	private_nh_("~")
+    private_nh_("~")
 {
-	private_nh_.param("MAP_FRAME_ID",MAP_FRAME_ID_,{std::string("map")});
+    private_nh_.param("MAP_FRAME_ID",MAP_FRAME_ID_,{std::string("map")});
     private_nh_.param("BASE_LINK_FRAME_ID",BASE_LINK_FRAME_ID_,{std::string("base_link")});
     private_nh_.param("LASER_FRAME_ID",LASER_FRAME_ID_,{std::string("laser")});
     private_nh_.param("CAMERA_FRAME_ID",CAMERA_FRAME_ID_,{std::string("camera")});
@@ -25,7 +25,7 @@ RosbagTF::RosbagTF() :
     private_nh_.param("CAMERA_PITCH",CAMERA_POSE.pitch,{0.0});
     private_nh_.param("CAMERA_YAW",CAMERA_POSE.yaw,{0.0});
     camera_transform_stamped_ = get_transform_stamped(BASE_LINK_FRAME_ID_,CAMERA_FRAME_ID_,CAMERA_POSE);
-   
+
     bool publish_pose;
     private_nh_.param("PUBLISH_POSE",publish_pose,{false});
     if(publish_pose){
@@ -45,7 +45,7 @@ RosbagTF::~RosbagTF() {}
 
 void RosbagTF::odom_callback(const nav_msgs::OdometryConstPtr& msg)
 {
-	odom_ = *msg;
+    odom_ = *msg;
     geometry_msgs::TransformStamped odom_transform;
     odom_transform.header = msg->header;
     odom_transform.child_frame_id = msg->child_frame_id;
@@ -58,7 +58,7 @@ void RosbagTF::odom_callback(const nav_msgs::OdometryConstPtr& msg)
 
 void RosbagTF::pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg)
 {
-	pose_.header = msg->header;
+    pose_.header = msg->header;
     pose_.pose = msg->pose.pose;
     pose_pub_.publish(pose_);
 
@@ -108,8 +108,8 @@ geometry_msgs::TransformStamped RosbagTF::get_transform_stamped(std::string fram
     return static_transform;
 }
 
-void RosbagTF::process() 
+void RosbagTF::process()
 {
     static_broadcaster_->sendTransform({laser_transform_stamped_, camera_transform_stamped_});
-    ros::spin(); 
+    ros::spin();
 }

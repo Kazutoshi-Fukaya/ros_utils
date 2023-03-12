@@ -27,4 +27,4 @@ private:
     cv::Mat img_;
 };
 
-#endif	// IMAGE_SUBSCRIBER_H_
+#endif  // IMAGE_SUBSCRIBER_H_

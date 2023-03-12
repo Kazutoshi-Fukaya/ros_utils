@@ -1,7 +1,7 @@
 #include "images_connector/images_connector.h"
 
-ImagesConnector::ImagesConnector() : 
-	private_nh_("~")
+ImagesConnector::ImagesConnector() :
+    private_nh_("~")
 {
     private_nh_.param("HZ",HZ_,{10});
     img_pub_ = nh_.advertise<sensor_msgs::Image>("image",1);

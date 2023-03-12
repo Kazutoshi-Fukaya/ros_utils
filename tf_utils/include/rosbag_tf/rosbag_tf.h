@@ -17,16 +17,16 @@
 class RosbagTF
 {
 public:
-	RosbagTF();
-	~RosbagTF();
-	void process();
+    RosbagTF();
+    ~RosbagTF();
+    void process();
 
 private:
-	void odom_callback(const nav_msgs::OdometryConstPtr& msg);
+    void odom_callback(const nav_msgs::OdometryConstPtr& msg);
     void pose_callback(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg);
     geometry_msgs::TransformStamped get_transform_stamped(std::string frame_id,std::string child_frame_id,TFPose pose);
 
-	// node handler
+    // node handler
     ros::NodeHandle nh_;
     ros::NodeHandle private_nh_;
 
@@ -34,22 +34,22 @@ private:
     ros::Subscriber pose_sub_;
     ros::Subscriber odom_sub_;
 
-	// publisher
+    // publisher
     ros::Publisher pose_pub_;
 
-	// tf
+    // tf
     boost::shared_ptr<tf2_ros::Buffer> buffer_;
     boost::shared_ptr<tf2_ros::TransformListener> listener_;
     boost::shared_ptr<tf2_ros::TransformBroadcaster> broadcaster_;
     boost::shared_ptr<tf2_ros::StaticTransformBroadcaster> static_broadcaster_;
 
-	// buffer
-	geometry_msgs::PoseStamped pose_;
-	nav_msgs::Odometry odom_;
+    // buffer
+    geometry_msgs::PoseStamped pose_;
+    nav_msgs::Odometry odom_;
     geometry_msgs::TransformStamped laser_transform_stamped_;
     geometry_msgs::TransformStamped camera_transform_stamped_;
 
-	// params
+    // params
     bool PUBLISH_POSE_;
     std::string MAP_FRAME_ID_;
     std::string BASE_LINK_FRAME_ID_;
@@ -57,4 +57,4 @@ private:
     std::string CAMERA_FRAME_ID_;
 };
 
-#endif	// ROSBAG_TF_H_
+#endif  // ROSBAG_TF_H_
