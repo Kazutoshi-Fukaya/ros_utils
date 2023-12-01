@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="rosbag" type="play" name="play" args=" -d 0.0 -l /home/amsl/karugamofukaya_2023-05-27-19-07-35.bag" />
+    <rosparam param="use_sim_time">true</rosparam>
+    <!-- <node pkg="rosbag" type="play" name="play" args=" -d 0.0 -l /home/amsl/bag_files/lifelong_localization/karugamofukaya_2023-05-27-19-07-35.bag" /> -->
+    <node pkg="rosbag" type="play" name="play" args=" -d 0.0 -l --clock /home/amsl/bag_files/lifelong_localization/testbbox_test_2023-07-20-20-14-10.bag" />
+    <!-- <node pkg="rosbag" type="play" name="play" args=" -d 0.0 -l /home/amsl/bag_files/lifelong_localization/testbbox_dist_test_2023-07-20-20-24-40.bag" /> -->
     <node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager" />
     <node pkg="nodelet" type="nodelet" name="point_cloud_xyzrgb" args="load depth_image_proc/point_cloud_xyzrgb nodelet_manager" >
         <remap from="rgb/camera_info" to="front_cam/camera/color/camera_info" />
